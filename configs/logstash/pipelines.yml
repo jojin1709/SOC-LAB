@@ -1,0 +1,19 @@
+- pipeline.id: wazuh
+  path.config: "/usr/share/logstash/pipeline/wazuh.conf"
+  pipeline.workers: 2
+  pipeline.batch.size: 500
+
+- pipeline.id: syslog
+  path.config: "/usr/share/logstash/pipeline/syslog.conf"
+  pipeline.workers: 2
+  pipeline.batch.size: 500
+
+- pipeline.id: zeek
+  path.config: "/usr/share/logstash/pipeline/zeek.conf"
+  pipeline.workers: 2
+  pipeline.batch.size: 500
+
+- pipeline.id: suricata
+  path.config: "/usr/share/logstash/pipeline/suricata.conf"
+  pipeline.workers: 1
+  pipeline.batch.size: 300

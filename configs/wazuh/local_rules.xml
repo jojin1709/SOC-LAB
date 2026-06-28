@@ -1,0 +1,131 @@
+<group name="soc-custom-rules,">
+  <!-- ===== BRUTE FORCE DETECTION ===== -->
+  <rule id="100100" level="10" frequency="10" timeframe="120" ignore="60">
+    <if_matched_sid>5710</if_matched_sid>
+    <description>Multiple SSH authentication failures - Possible Brute Force Attack</description>
+    <description>Source IP: $(srcip) - $(occurrences) attempts in 2 minutes</description>
+    <group>authentication_failure,brute_force,ssh,</group>
+  </rule>
+
+  <rule id="100101" level="10" frequency="5" timeframe="60" ignore="30">
+    <if_matched_sid>5712</if_matched_sid>
+    <description>Multiple SSH root login attempts - Possible Brute Force</description>
+    <group>authentication_failure,brute_force,ssh,root,</group>
+  </rule>
+
+  <!-- ===== WEB ATTACK DETECTION ===== -->
+  <rule id="100200" level="12">
+    <if_matched_sid>31153</if_matched_sid>
+    <description>SQL Injection Attempt Detected from $(srcip) to $(url)</description>
+    <group>web_attack,sql_injection,</group>
+    <mitre>
+      <id>T1190</id>
+    </mitre>
+  </rule>
+
+  <rule id="100201" level="10">
+    <if_matched_sid>31104</if_matched_sid>
+    <description>Cross-Site Scripting (XSS) Attempt from $(srcip)</description>
+    <group>web_attack,xss,</group>
+  </rule>
+
+  <rule id="100202" level="8" frequency="20" timeframe="60" ignore="10">
+    <if_matched_sid>31101</if_matched_sid>
+    <description>Web Directory Bruteforce / Reconnaissance from $(srcip)</description>
+    <group>web_recon,brute_force,</group>
+  </rule>
+
+  <!-- ===== MALWARE DETECTION ===== -->
+  <rule id="100300" level="14">
+    <if_matched_sid>510</if_matched_sid>
+    <description>Malware Detected: $(fname) on $(hostname)</description>
+    <group>malware,infection,</group>
+    <mitre>
+      <id>T1204</id>
+    </mitre>
+  </rule>
+
+  <rule id="100301" level="12">
+    <if_matched_group>syscheck</if_matched_group>
+    <match>modified</match>
+    <match>/etc/passwd|/etc/shadow|/etc/sudoers|/etc/group</match>
+    <description>Critical system file modified: $(file) on $(hostname)</description>
+    <group>syscheck,privilege_escalation,</group>
+    <mitre>
+      <id>T1548</id>
+    </mitre>
+  </rule>
+
+  <!-- ===== PERSISTENCE DETECTION ===== -->
+  <rule id="100400" level="12">
+    <if_matched_group>syscheck</if_matched_group>
+    <match>added</match>
+    <match>/etc/cron.d|/etc/cron.hourly|/etc/cron.daily|/etc/init.d|/etc/systemd/system</match>
+    <description>Potential Persistence Mechanism: $(file) added on $(hostname)</description>
+    <group>persistence,cron,startup,</group>
+    <mitre>
+      <id>T1053</id>
+    </mitre>
+  </rule>
+
+  <!-- ===== DATA EXFILTRATION ===== -->
+  <rule id="100500" level="12" frequency="100" timeframe="60" ignore="30">
+    <if_matched_sid>86502</if_matched_sid>
+    <description>High volume of DNS queries - Possible Data Exfiltration via DNS tunneling</description>
+    <group>exfiltration,dns_tunneling,</group>
+    <mitre>
+      <id>T1048</id>
+    </mitre>
+  </rule>
+
+  <!-- ===== LATERAL MOVEMENT ===== -->
+  <rule id="100600" level="10">
+    <if_matched_sid>531</if_matched_sid>
+    <match>Failed password for invalid user</match>
+    <description>Lateral movement attempt detected - Invalid user access from $(srcip)</description>
+    <group>lateral_movement,</group>
+  </rule>
+
+  <!-- ===== PRIVILEGE ESCALATION ===== -->
+  <rule id="100700" level="10">
+    <if_matched_sid>5402</if_matched_sid>
+    <match>session opened for user root</match>
+    <description>Privilege escalation detected: $(srcuser) escalated to root on $(hostname)</description>
+    <group>privilege_escalation,sudo,</group>
+    <mitre>
+      <id>T1548</id>
+    </mitre>
+  </rule>
+
+  <!-- ===== PORT SCANNING ===== -->
+  <rule id="100800" level="8" frequency="30" timeframe="30" ignore="15">
+    <if_matched_sid>18100</if_matched_sid>
+    <description>Port scan detected from $(srcip) - $(occurrences) events in 30 seconds</description>
+    <group>recon,port_scan,</group>
+    <mitre>
+      <id>T1046</id>
+    </mitre>
+  </rule>
+
+  <!-- ===== POWERSHELL ABUSE ===== -->
+  <rule id="100900" level="10">
+    <if_matched_sid>897</if_matched_sid>
+    <match>powershell|PowerShell|pwsh</match>
+    <match>-EncodedCommand|-e |-enc |DownloadString|Invoke-Expression|IEX</match>
+    <description>Suspicious PowerShell execution detected on $(hostname)</description>
+    <group>lateral_movement,execution,powershell,</group>
+    <mitre>
+      <id>T1059</id>
+    </mitre>
+  </rule>
+
+  <!-- ===== CUSTOM ALERT: MISP IOC MATCH ===== -->
+  <rule id="101000" level="13">
+    <if_matched_sid>87100</if_matched_sid>
+    <description>MISP Threat Intel Hit: Connection to known malicious IP $(srcip) from $(hostname)</description>
+    <group>threat_intel,ioc_match,</group>
+    <mitre>
+      <id>T1071</id>
+    </mitre>
+  </rule>
+</group>

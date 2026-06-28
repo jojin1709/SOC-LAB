@@ -1,0 +1,17 @@
+.env
+*.log
+logs/
+data/
+backups/
+
+# Generated local TLS material
+configs/nginx/ssl/*.crt
+configs/nginx/ssl/*.key
+!configs/nginx/ssl/.gitkeep
+
+# Local editor/runtime files
+.vscode/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db

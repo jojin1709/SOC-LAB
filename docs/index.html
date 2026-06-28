@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SOC Lab Documentation</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <strong>SOC Lab</strong>
+      <span>Docker Security Operations Center</span>
+    </div>
+    <nav>
+      <a href="#start">Start</a>
+      <a href="#services">Services</a>
+      <a href="#commands">Commands</a>
+      <a href="#troubleshooting">Troubleshooting</a>
+      <a href="https://www.linkedin.com/in/jojin-john/">LinkedIn</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Developed by JOJIN JOHN</p>
+        <h1>Complete SOC Lab Documentation</h1>
+        <p>
+          A Docker-based blue-team lab for Wazuh, Elastic, TheHive, Cortex, MISP,
+          Shuffle, monitoring, vulnerable targets, and optional Linux packet capture.
+        </p>
+        <div class="actions">
+          <a class="button primary" href="#start">Get started</a>
+          <a class="button" href="https://www.linkedin.com/in/jojin-john/">Developer LinkedIn</a>
+        </div>
+      </div>
+      <aside class="status-panel">
+        <h2>Default docs URL</h2>
+        <code>http://localhost:8090</code>
+        <h2>Cross-platform mode</h2>
+        <code>docker compose up -d</code>
+        <h2>Linux NSM mode</h2>
+        <code>docker compose --profile linux-nsm up -d</code>
+      </aside>
+    </section>
+
+    <section id="overview">
+      <h2>What Is This?</h2>
+      <p>
+        SOC Lab is a self-contained environment for learning security monitoring,
+        log analysis, detection engineering, incident response, threat intelligence,
+        SOAR automation, and controlled attack simulation.
+      </p>
+      <div class="grid three">
+        <article>
+          <h3>Detect</h3>
+          <p>Wazuh, Elastic, Kibana, Logstash, Filebeat, and Metricbeat collect and analyze security events.</p>
+        </article>
+        <article>
+          <h3>Respond</h3>
+          <p>TheHive, Cortex, and Shuffle help turn alerts into cases, enrichment, and automation workflows.</p>
+        </article>
+        <article>
+          <h3>Practice</h3>
+          <p>DVWA and Juice Shop provide safe local targets for testing alerts and dashboards.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="start">
+      <h2>Quick Start</h2>
+      <div class="grid two">
+        <article>
+          <h3>Windows Docker Desktop</h3>
+          <pre><code>powershell -ExecutionPolicy Bypass -File .\scripts\setup.ps1
+docker compose ps</code></pre>
+        </article>
+        <article>
+          <h3>Linux / Kali</h3>
+          <pre><code>chmod +x scripts/*.sh
+sudo sysctl -w vm.max_map_count=262144
+./scripts/setup.sh
+docker compose ps</code></pre>
+        </article>
+      </div>
+      <article>
+        <h3>Linux / Kali With Suricata and Zeek</h3>
+        <pre><code>WITH_LINUX_NSM=1 ./scripts/setup.sh</code></pre>
+        <p>Suricata and Zeek use host networking and packet capture. Keep them disabled on Windows Docker Desktop.</p>
+      </article>
+    </section>
+
+    <section id="services">
+      <h2>Service Access</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Service</th><th>Purpose</th><th>URL</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Docs</td><td>Documentation website</td><td>http://localhost:8090</td></tr>
+            <tr><td>Kibana</td><td>Elastic dashboards</td><td>http://localhost:5601</td></tr>
+            <tr><td>Wazuh</td><td>SIEM/XDR UI</td><td>https://localhost:4431</td></tr>
+            <tr><td>TheHive</td><td>Incident response</td><td>http://localhost:9000</td></tr>
+            <tr><td>Cortex</td><td>Observable analysis</td><td>http://localhost:9001</td></tr>
+            <tr><td>MISP</td><td>Threat intelligence</td><td>https://localhost:8443</td></tr>
+            <tr><td>Shuffle</td><td>SOAR automation</td><td>http://localhost:3443</td></tr>
+            <tr><td>Grafana</td><td>Metrics dashboards</td><td>http://localhost:3000</td></tr>
+            <tr><td>Prometheus</td><td>Metrics collection</td><td>http://localhost:9090</td></tr>
+            <tr><td>MinIO</td><td>Object storage</td><td>http://localhost:9002</td></tr>
+            <tr><td>DVWA</td><td>Vulnerable target</td><td>http://localhost:8080</td></tr>
+            <tr><td>Juice Shop</td><td>Vulnerable target</td><td>http://localhost:3001</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="commands">
+      <h2>Command Reference</h2>
+      <div class="grid two">
+        <article>
+          <h3>Lifecycle</h3>
+          <pre><code>docker compose up -d
+docker compose --profile linux-nsm up -d
+docker compose stop
+docker compose down
+docker compose down -v</code></pre>
+        </article>
+        <article>
+          <h3>Logs and Health</h3>
+          <pre><code>docker compose ps
+docker compose logs -f
+docker compose logs -f wazuh-manager
+docker compose config --quiet</code></pre>
+        </article>
+        <article>
+          <h3>Test Data</h3>
+          <pre><code>chmod +x scripts/ingest_test_data.sh
+./scripts/ingest_test_data.sh</code></pre>
+        </article>
+        <article>
+          <h3>Restart Integrations</h3>
+          <pre><code>docker compose restart wazuh-manager
+docker compose logs --tail=100 wazuh-manager</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section id="architecture">
+      <h2>Architecture</h2>
+      <ol class="steps">
+        <li>Agents, test targets, and Docker logs generate telemetry.</li>
+        <li>Wazuh and Elastic ingest, parse, index, and alert on events.</li>
+        <li>Wazuh custom integrations can send high-severity alerts to TheHive and MISP.</li>
+        <li>TheHive manages investigations while Cortex enriches observables.</li>
+        <li>Shuffle can automate response actions through workflows.</li>
+        <li>Grafana and Prometheus provide operational visibility.</li>
+      </ol>
+    </section>
+
+    <section id="troubleshooting">
+      <h2>Troubleshooting</h2>
+      <div class="grid two">
+        <article>
+          <h3>Docker Not Running</h3>
+          <pre><code>docker info</code></pre>
+          <p>Start Docker Desktop on Windows or the Docker service on Linux/Kali.</p>
+        </article>
+        <article>
+          <h3>Linux Kernel Setting</h3>
+          <pre><code>sudo sysctl -w vm.max_map_count=262144</code></pre>
+          <p>Elasticsearch and Wazuh indexer need this setting on Linux hosts.</p>
+        </article>
+        <article>
+          <h3>Ports in Use</h3>
+          <pre><code>docker compose ps
+netstat -ano | findstr :443</code></pre>
+          <p>Change ports in <code>.env</code> if another local service is already using them.</p>
+        </article>
+        <article>
+          <h3>Clean Reset</h3>
+          <pre><code>docker compose down -v
+docker compose pull
+docker compose up -d</code></pre>
+          <p>This deletes lab data and starts fresh.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="support" class="support">
+      <h2>Support This Project</h2>
+      <p>Built by <strong>JOJIN JOHN</strong>. Connect on LinkedIn or support the project below.</p>
+      <p><a href="https://www.linkedin.com/in/jojin-john/">https://www.linkedin.com/in/jojin-john/</a></p>
+      <div class="coffee">
+        <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="jojin1709" data-color="#FFDD00" data-emoji="🙂" data-font="Cookie" data-text="Buy me a thanks" data-outline-color="#000000" data-font-color="#000000" data-coffee-color="#ffffff"></script>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>Developed by JOJIN JOHN</span>
+    <a href="https://www.linkedin.com/in/jojin-john/">LinkedIn</a>
+  </footer>
+
+  <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="jojin1709" data-description="Support me on Buy me a coffee!" data-message="" data-color="#5F7FFF" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
+</body>
+</html>
