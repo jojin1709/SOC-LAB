@@ -40,6 +40,55 @@
 
 ---
 
+## SOC-LAB Control Center
+
+SOC-LAB now includes a web-based Control Center for managing lab modules individually.
+
+### Quick Start with Control Center
+
+```bash
+docker compose up -d control-center
+```
+
+Open the Control Center in your browser:
+
+```
+http://localhost:8088
+```
+
+### Lab Modules
+
+The Control Center manages these lab profiles:
+
+| Lab | Description | RAM | Profile |
+|-----|-------------|-----|---------|
+| Core SOC | Wazuh SIEM, Elasticsearch, Kibana, vulnerable targets | 4-6 GB | `core` |
+| Threat Intel | MISP threat intelligence platform | 2-4 GB | `intel` |
+| Incident Response | TheHive case management, Cortex analyzers | 2-4 GB | `ir` |
+| SOAR Automation | Shuffle SOAR workflows | 1-2 GB | `soar` |
+| Monitoring | Grafana dashboards, Prometheus, MinIO | 1-2 GB | `monitoring` |
+| NSM | Suricata IDS, Zeek network monitor | 2-4 GB | `nsm` |
+| Full Enterprise SOC | All services combined | 16-32 GB | `full` |
+
+### Command Line Alternative
+
+Start individual labs:
+
+```bash
+docker compose --profile core up -d
+docker compose --profile intel up -d
+docker compose --profile soar up -d
+```
+
+Stop individual labs:
+
+```bash
+docker compose --profile core down
+docker compose --profile intel down
+```
+
+---
+
 ## Requirements
 
 **Minimum:**
