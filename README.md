@@ -25,12 +25,13 @@
 | TheHive         | Case management             | `http://localhost:9000`                           |
 | Cortex          | Observable analysis         | `http://localhost:9001`                           |
 | MISP            | Threat intelligence         | `https://localhost:8443`, `http://localhost:8081` |
-| Shuffle         | SOAR automation             | `http://localhost:3443`                           |
+| Shuffle (Backend) | SOAR automation backend  | `http://localhost:5001` (direct) or `https://shuffle.soc-lab.local` (via nginx) |
+| Shuffle (Frontend)  | SOAR UI                | `http://localhost:3001` (direct)                    |
 | Grafana         | Metrics dashboards          | `http://localhost:3000`                           |
 | Prometheus      | Metrics collection          | `http://localhost:9090`                           |
 | MinIO           | S3-compatible storage       | `http://localhost:9002` (console: `9003`)         |
 | DVWA            | Vulnerable target           | `http://localhost:8080`                           |
-| Juice Shop      | Vulnerable target           | `http://localhost:3001`                           |
+| Juice Shop      | Vulnerable target           | `http://localhost:3002`                           |
 | Docs site       | Project documentation       | `http://localhost:8090`                           |
 | Suricata        | IDS / IPS                   | Linux profile only                                |
 | Zeek            | Network security monitoring | Linux profile only                                |
@@ -171,6 +172,7 @@ Set API keys before use:
 # Edit .env and/or configs/wazuh/ossec.conf
 THEHIVE_API_KEY=your_thehive_key
 MISP_ADMIN_PASSKEY=your_misp_key
+SHUFFLE_API_KEY=your_shuffle_key
 
 docker compose restart wazuh-manager
 ```

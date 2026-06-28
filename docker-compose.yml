@@ -68,6 +68,7 @@ services:
       - wazuh-dashboard
       - thehive
       - grafana
+      - shuffle-backend
     healthcheck:
       test: ["CMD", "nginx", "-t"]
       interval: 30s
@@ -475,81 +476,101 @@ services:
       timeout: 5s
       retries: 5
 
-  # ==================== SHUFFLE SOAR ====================
+# ==================== SHUFFLE SOAR ====================
+  # NOTE: Shuffle migrated from monolith (shuffle:1.3.0) to separate images.
+  # Backend and frontend are now separate services; orborus handles workflow execution.
+  # Updated to use latest official images from ghcr.io/shuffle
 
   shuffle-backend:
-    image: ghcr.io/shuffle/shuffle:${SHUFFLE_VERSION:-1.3.0}
+    image: ghcr.io/shuffle/shuffle-backend:latest
     container_name: soc-shuffle-backend
     restart: unless-stopped
     environment:
-      - SHUFFLE_OPENSEARCH_URL=http://opensearch:9200
-      - SHUFFLE_MONGODB_URL=mongodb://shuffle-mongo:27017/shuffle
+      - SHUFFLE_APP_HOTLOAD_FOLDER=/shuffle-apps
+      - SHUFFLE_FILE_LOCATION=/shuffle-files
+      - SHUFFLE_OPENSEARCH_URL=http://shuffle-opensearch:9200
+      - SHUFFLE_SWARM_CONFIG=run
+      - SHUFFLE_LOGS_DISABLED=true
       - SHUFFLE_API_KEY=${SHUFFLE_API_KEY:-ShuffleApiKeyChangeMe123!}
-      - SHUFFLE_SWARM_CONFIG=shuffle
-      - SHUFFLE_DOMAIN=http://shuffle.soc-lab.local:${SHUFFLE_PORT:-3443}
-      - SHUFFLE_LOGGING_LEVEL=INFO
-      - SHUFFLE_USE_HTTPS=false
     ports:
-      - "${SHUFFLE_PORT:-3443}:3443"
+      - "${SHUFFLE_PORT:-5001}:5001"
     volumes:
-      - shuffle-data:/app/data
-      - ./configs/shuffle/shuffle.conf:/app/shuffle.conf:ro
-      - ./integrations/shuffle_workflows:/app/workflows:ro
+      - shuffle-data:/shuffle-apps
+      - shuffle-data:/shuffle-files
     networks:
       soc-network:
         ipv4_address: 10.100.0.60
     depends_on:
-      - shuffle-mongo
       - shuffle-opensearch
     healthcheck:
-      test: ["CMD", "curl", "-s", "-o", "/dev/null", "http://localhost:3443/api/v1/health"]
+      test: ["CMD", "curl", "-s", "-o", "/dev/null", "http://localhost:5001/api/v1/health"]
       interval: 30s
       timeout: 10s
       retries: 5
 
   shuffle-frontend:
-    image: ghcr.io/shuffle/shuffle-frontend:${SHUFFLE_VERSION:-1.3.0}
+    image: ghcr.io/shuffle/shuffle-frontend:latest
     container_name: soc-shuffle-frontend
     restart: unless-stopped
     environment:
-      - BACKEND_HOST=shuffle-backend
-      - BACKEND_PORT=3443
+      - BACKEND_HOSTNAME=http://shuffle-backend:5001
     ports:
-      - "3080:80"
+      - "${SHUFFLE_UI_PORT:-3001}:80"
     networks:
       soc-network:
         ipv4_address: 10.100.0.61
     depends_on:
       - shuffle-backend
 
-  shuffle-mongo:
-    image: mongo:7.0
-    container_name: soc-shuffle-mongo
+  shuffle-orborus:
+    image: ghcr.io/shuffle/shuffle-orborus:latest
+    container_name: soc-shuffle-orborus
     restart: unless-stopped
+    environment:
+      - SHUFFLE_SWARM_CONFIG=run
+      - SHUFFLE_LOGS_DISABLED=true
+      - BASE_URL=http://shuffle-backend:5001
+      - ENVIRONMENT_NAME=Shuffle
+      - SHUFFLE_WORKER_IMAGE=ghcr.io/shuffle/shuffle-worker:latest
     volumes:
-      - shuffle-data:/data/db
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
       soc-network:
         ipv4_address: 10.100.0.62
-    healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh --quiet
-      interval: 15s
-      timeout: 5s
-      retries: 5
+    depends_on:
+      - shuffle-backend
+      - shuffle-opensearch
+    security_opt:
+      - seccomp:unconfined
 
   shuffle-opensearch:
-    image: opensearchproject/opensearch:2.11.0
+    image: opensearchproject/opensearch:3.2.0
     container_name: soc-shuffle-opensearch
     restart: unless-stopped
     environment:
       - discovery.type=single-node
       - plugins.security.disabled=true
       - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=${SHUFFLE_OPENSEARCH_PASSWORD:-ChangeMeOpenSearch123!}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
     volumes:
       - opensearch-data:/usr/share/opensearch/data
+    ports:
+      - "9205:9200"
     networks:
       soc-network:
         ipv4_address: 10.100.0.63
+    healthcheck:
+      test: ["CMD", "curl", "-s", "-o", "/dev/null", "http://localhost:9200/_cluster/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
 
   # ==================== NETWORK MONITORING (IDS/IPS) ====================
 
@@ -735,7 +756,7 @@ services:
     container_name: soc-target-juice-shop
     restart: unless-stopped
     ports:
-      - "3001:3000"
+      - "3002:3000"
     networks:
       soc-network:
         ipv4_address: 10.100.0.201
