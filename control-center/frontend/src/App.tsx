@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import LabCard from './components/LabCard';
 import StatusPanel from './components/StatusPanel';
 
@@ -76,7 +76,7 @@ function App() {
       <header className="bg-gray-800 border-b border-gray-700 p-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold text-cyber-400">SOC-LAB Control Center</h1>
+            <h1 className="text-2xl font-bold text-cyan-400">SOC-LAB Control Center</h1>
             <p className="text-gray-400">Web-based Security Operations Center Management</p>
           </div>
         </div>
@@ -86,7 +86,7 @@ function App() {
         <StatusPanel />
         
         <section className="mt-8">
-          <h2 className="text-xl font-semibold mb-4 text-cyber-300">Lab Modules</h2>
+          <h2 className="text-xl font-semibold mb-4 text-cyan-300">Lab Modules</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {LABS.map(lab => (
               <LabCard key={lab.id} lab={lab} />
