@@ -3,7 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SOC Lab Documentation</title>
+  <title>SOC Lab — Docker Security Operations Center by Jojin John</title>
+  <meta name="description" content="A fully Docker-based SOC lab featuring Wazuh, TheHive, MISP, Shuffle, Suricata, DVWA, Juice Shop, Grafana and Prometheus. Built for blue-team training, detection engineering, and incident response practice.">
+  <meta name="author" content="Jojin John">
+  <meta name="keywords" content="SOC lab, docker, Wazuh, SIEM, TheHive, MISP, Shuffle, SOAR, DVWA, Juice Shop, cybersecurity, blue team">
+
+  <!-- Open Graph / LinkedIn / Social sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://jojin1709.github.io/SOC-LAB/">
+  <meta property="og:title" content="SOC Lab — Docker Security Operations Center">
+  <meta property="og:description" content="A fully Docker-based blue-team SOC lab with Wazuh, TheHive, MISP, Shuffle SOAR, DVWA, Juice Shop, Grafana, and Suricata. One command to start.">
+  <meta property="og:image" content="https://jojin1709.github.io/SOC-LAB/assets/wazuh-screen.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SOC Lab — Docker Security Operations Center">
+  <meta name="twitter:description" content="Blue-team SOC lab: Wazuh, TheHive, MISP, Shuffle, DVWA, Juice Shop & more. Docker-based, one command to run.">
+  <meta name="twitter:image" content="https://jojin1709.github.io/SOC-LAB/assets/wazuh-screen.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="shortcut icon" href="assets/favicon.png">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -18,6 +37,7 @@
     </div>
     <nav>
       <a href="#start">Start</a>
+      <a href="#previews">Tools</a>
       <a href="#services">Services</a>
       <a href="#commands">Commands</a>
       <a href="#troubleshooting">Troubleshooting</a>
@@ -129,7 +149,7 @@
         <article class="tool-card-wide">
           <div class="tool-info">
             <div class="tool-header">
-              <img src="assets/shuffle.png" class="tool-logo-sm" alt="Shuffle">
+              <img src="assets/shuffle-logo-sm.png" class="tool-logo-sm" alt="Shuffle">
               <div><span class="badge orange">SOAR Automation</span><h3>Shuffle</h3></div>
             </div>
             <p>Open-source SOAR for building automated playbooks — connect Wazuh alerts to TheHive cases, MISP enrichments, and response actions.</p>
