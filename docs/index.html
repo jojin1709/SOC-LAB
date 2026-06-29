@@ -4,9 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SOC Lab Documentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <canvas id="bg-canvas"></canvas>
   <header class="topbar">
     <div>
       <strong>SOC Lab</strong>
@@ -65,6 +69,84 @@
         <article>
           <h3>Practice</h3>
           <p>DVWA and Juice Shop provide safe local targets for testing alerts and dashboards.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="previews">
+      <h2>Integrated Security Tools & Labs</h2>
+      <div class="grid four">
+        <article class="tool-card">
+          <div class="logo-wrap">
+            <img src="assets/wazuh.png" alt="Wazuh" class="tool-logo">
+          </div>
+          <span class="badge blue">SIEM & Detection</span>
+          <h3>Wazuh</h3>
+          <p>Centralized security monitoring, log analysis, threat detection, and active response endpoint agent manager.</p>
+          <a class="access-link" href="https://localhost:4431" target="_blank">Access Portal &rarr;</a>
+        </article>
+        <article class="tool-card">
+          <div class="logo-wrap">
+            <img src="assets/thehive.png" alt="TheHive" class="tool-logo">
+          </div>
+          <span class="badge purple">Incident Response</span>
+          <h3>TheHive</h3>
+          <p>Scalable, 4-in-1 security incident response and case management platform integrated with Cortex analytics.</p>
+          <a class="access-link" href="http://localhost:9000" target="_blank">Access Portal &rarr;</a>
+        </article>
+        <article class="tool-card">
+          <div class="logo-wrap">
+            <img src="assets/misp.png" alt="MISP" class="tool-logo">
+          </div>
+          <span class="badge yellow">Threat Intelligence</span>
+          <h3>MISP</h3>
+          <p>Threat intelligence sharing platform for gathering, sharing, and exporting IOCs and threat actor maps.</p>
+          <a class="access-link" href="https://localhost:8443" target="_blank">Access Portal &rarr;</a>
+        </article>
+        <article class="tool-card">
+          <div class="logo-wrap">
+            <img src="assets/shuffle.png" alt="Shuffle" class="tool-logo">
+          </div>
+          <span class="badge orange">SOAR Automation</span>
+          <h3>Shuffle</h3>
+          <p>Open-source automation platform to integrate Wazuh, TheHive, MISP, and targets with custom playbooks.</p>
+          <a class="access-link" href="http://localhost:3001" target="_blank">Access Portal &rarr;</a>
+        </article>
+        <article class="tool-card">
+          <div class="logo-wrap">
+            <img src="assets/suricata.png" alt="Suricata" class="tool-logo">
+          </div>
+          <span class="badge green">Network IDS</span>
+          <h3>Suricata</h3>
+          <p>High-performance network threat detection and intrusion prevention system scanning live interface traffic.</p>
+          <span class="access-link disabled">Integrated Engine</span>
+        </article>
+        <article class="tool-card">
+          <div class="logo-wrap">
+            <img src="assets/dvwa.png" alt="DVWA" class="tool-logo">
+          </div>
+          <span class="badge red">Vulnerable Target</span>
+          <h3>DVWA</h3>
+          <p>PHP/MySQL vulnerable web application for practicing SQL injections, XSS, and command injections.</p>
+          <a class="access-link" href="http://localhost:8080" target="_blank">Access Portal &rarr;</a>
+        </article>
+        <article class="tool-card">
+          <div class="logo-wrap">
+            <img src="assets/juice-shop.png" alt="OWASP Juice Shop" class="tool-logo">
+          </div>
+          <span class="badge red">Vulnerable Target</span>
+          <h3>Juice Shop</h3>
+          <p>Modern OWASP vulnerable Node.js application loaded with security challenges and tracking dashboards.</p>
+          <a class="access-link" href="http://localhost:3002" target="_blank">Access Portal &rarr;</a>
+        </article>
+        <article class="tool-card">
+          <div class="logo-wrap">
+            <img src="assets/grafana.png" alt="Grafana" class="tool-logo">
+          </div>
+          <span class="badge cyan">Metrics & Monitoring</span>
+          <h3>Metrics Suite</h3>
+          <p>Grafana and Prometheus monitoring stack for charting container usage and system diagnostics.</p>
+          <a class="access-link" href="http://localhost:3000" target="_blank">Access Portal &rarr;</a>
         </article>
       </div>
     </section>
@@ -209,6 +291,97 @@ docker compose up -d</code></pre>
     <span>Developed by JOJIN JOHN</span>
     <a href="https://www.linkedin.com/in/jojin-john/">LinkedIn</a>
   </footer>
+
+  <script>
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    const particles = [];
+    const maxParticles = Math.min(80, Math.floor((width * height) / 20000));
+    const connectionDist = 120;
+    let mouse = { x: null, y: null, radius: 150 };
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+
+    window.addEventListener('mouseleave', () => {
+      mouse.x = null;
+      mouse.y = null;
+    });
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.vx = (Math.random() - 0.5) * 0.4;
+        this.vy = (Math.random() - 0.5) * 0.4;
+        this.radius = Math.random() * 1.5 + 1;
+      }
+      update() {
+        if (mouse.x !== null && mouse.y !== null) {
+          const dx = this.x - mouse.x;
+          const dy = this.y - mouse.y;
+          const dist = Math.hypot(dx, dy);
+          if (dist < mouse.radius) {
+            const force = (mouse.radius - dist) / mouse.radius;
+            this.x += (dx / dist) * force * 1.5;
+            this.y += (dy / dist) * force * 1.5;
+          }
+        }
+
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if (this.x < 0 || this.x > width) this.vx *= -1;
+        if (this.y < 0 || this.y > height) this.vy *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(34, 211, 238, 0.4)';
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < maxParticles; i++) {
+      particles.push(new Particle());
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
+
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.hypot(dx, dy);
+          if (dist < connectionDist) {
+            const alpha = (1 - (dist / connectionDist)) * 0.15;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(6, 182, 212, ${alpha})`;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
 
   <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="jojin1709" data-description="Support me on Buy me a coffee!" data-message="" data-color="#5F7FFF" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
 </body>
