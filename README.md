@@ -13,10 +13,22 @@
 
 ---
 
+## Installation & Setup
+
+To deploy the lab, clone the repository and navigate into the project directory:
+
+```bash
+git clone https://github.com/jojin1709/SOC-LAB.git
+cd SOC-LAB
+```
+
+---
+
 ## Stack
 
 | Service         | Purpose                     | URL / Port                                        |
 | --------------- | --------------------------- | ------------------------------------------------- |
+| Control Center  | Web-based lab manager       | `http://localhost:8088` (Main Portal)             |
 | Nginx           | Reverse proxy               | `http://localhost`, `https://localhost`           |
 | Kibana          | Elastic dashboards          | `http://localhost:5601`                           |
 | Elasticsearch   | Search / indexing           | `http://localhost:9200`                           |
