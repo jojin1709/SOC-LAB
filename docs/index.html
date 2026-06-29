@@ -74,80 +74,137 @@
     </section>
 
     <section id="previews">
-      <h2>Integrated Security Tools & Labs</h2>
-      <div class="grid four">
-        <article class="tool-card">
-          <div class="logo-wrap">
-            <img src="assets/wazuh.png" alt="Wazuh" class="tool-logo">
+      <h2>Integrated Security Tools &amp; Labs</h2>
+      <p class="section-sub">Each tool runs as a Docker container. Click <strong>Open Dashboard</strong> after starting the lab.</p>
+      <div class="tool-grid">
+
+        <article class="tool-card-wide">
+          <div class="tool-info">
+            <div class="tool-header">
+              <img src="assets/wazuh.png" class="tool-logo-sm" alt="Wazuh">
+              <div><span class="badge blue">SIEM &amp; Detection</span><h3>Wazuh</h3></div>
+            </div>
+            <p>Centralized security monitoring with log analysis, FIM, threat detection, active response, and endpoint agent management across the lab.</p>
+            <a class="access-link" href="https://localhost:4431" target="_blank">Open Dashboard &rarr;</a>
           </div>
-          <span class="badge blue">SIEM & Detection</span>
-          <h3>Wazuh</h3>
-          <p>Centralized security monitoring, log analysis, threat detection, and active response endpoint agent manager.</p>
-          <a class="access-link" href="https://localhost:4431" target="_blank">Access Portal &rarr;</a>
-        </article>
-        <article class="tool-card">
-          <div class="logo-wrap">
-            <img src="assets/thehive.png" alt="TheHive" class="tool-logo">
+          <div class="tool-screenshot">
+            <img src="assets/wazuh-screen.png" alt="Wazuh Dashboard" loading="lazy">
           </div>
-          <span class="badge purple">Incident Response</span>
-          <h3>TheHive</h3>
-          <p>Scalable, 4-in-1 security incident response and case management platform integrated with Cortex analytics.</p>
-          <a class="access-link" href="http://localhost:9000" target="_blank">Access Portal &rarr;</a>
         </article>
-        <article class="tool-card">
-          <div class="logo-wrap">
-            <img src="assets/misp.png" alt="MISP" class="tool-logo">
+
+        <article class="tool-card-wide">
+          <div class="tool-info">
+            <div class="tool-header">
+              <img src="assets/thehive.png" class="tool-logo-sm" alt="TheHive">
+              <div><span class="badge purple">Incident Response</span><h3>TheHive</h3></div>
+            </div>
+            <p>Scalable 4-in-1 incident response platform. Manage security cases, alerts, tasks, and observables with Cortex automated analysis.</p>
+            <a class="access-link" href="http://localhost:9000" target="_blank">Open Dashboard &rarr;</a>
           </div>
-          <span class="badge yellow">Threat Intelligence</span>
-          <h3>MISP</h3>
-          <p>Threat intelligence sharing platform for gathering, sharing, and exporting IOCs and threat actor maps.</p>
-          <a class="access-link" href="https://localhost:8443" target="_blank">Access Portal &rarr;</a>
-        </article>
-        <article class="tool-card">
-          <div class="logo-wrap">
-            <img src="assets/shuffle.png" alt="Shuffle" class="tool-logo">
+          <div class="tool-screenshot no-screen">
+            <div class="screen-placeholder">
+              <img src="assets/thehive.png" class="placeholder-logo" alt="">
+              <span>Incident Response &amp; Case Management</span>
+            </div>
           </div>
-          <span class="badge orange">SOAR Automation</span>
-          <h3>Shuffle</h3>
-          <p>Open-source automation platform to integrate Wazuh, TheHive, MISP, and targets with custom playbooks.</p>
-          <a class="access-link" href="http://localhost:3001" target="_blank">Access Portal &rarr;</a>
         </article>
-        <article class="tool-card">
-          <div class="logo-wrap">
-            <img src="assets/suricata.png" alt="Suricata" class="tool-logo">
+
+        <article class="tool-card-wide">
+          <div class="tool-info">
+            <div class="tool-header">
+              <img src="assets/misp.png" class="tool-logo-sm" alt="MISP">
+              <div><span class="badge yellow">Threat Intelligence</span><h3>MISP</h3></div>
+            </div>
+            <p>Malware Information Sharing Platform for gathering, correlating, and sharing threat indicators, threat actors, and IOCs across teams.</p>
+            <a class="access-link" href="https://localhost:8443" target="_blank">Open Dashboard &rarr;</a>
           </div>
-          <span class="badge green">Network IDS</span>
-          <h3>Suricata</h3>
-          <p>High-performance network threat detection and intrusion prevention system scanning live interface traffic.</p>
-          <span class="access-link disabled">Integrated Engine</span>
-        </article>
-        <article class="tool-card">
-          <div class="logo-wrap">
-            <img src="assets/dvwa.png" alt="DVWA" class="tool-logo">
+          <div class="tool-screenshot no-screen">
+            <div class="screen-placeholder">
+              <img src="assets/misp.png" class="placeholder-logo" alt="">
+              <span>Threat Intelligence Platform</span>
+            </div>
           </div>
-          <span class="badge red">Vulnerable Target</span>
-          <h3>DVWA</h3>
-          <p>PHP/MySQL vulnerable web application for practicing SQL injections, XSS, and command injections.</p>
-          <a class="access-link" href="http://localhost:8080" target="_blank">Access Portal &rarr;</a>
         </article>
-        <article class="tool-card">
-          <div class="logo-wrap">
-            <img src="assets/juice-shop.png" alt="OWASP Juice Shop" class="tool-logo">
+
+        <article class="tool-card-wide">
+          <div class="tool-info">
+            <div class="tool-header">
+              <img src="assets/shuffle.png" class="tool-logo-sm" alt="Shuffle">
+              <div><span class="badge orange">SOAR Automation</span><h3>Shuffle</h3></div>
+            </div>
+            <p>Open-source SOAR for building automated playbooks — connect Wazuh alerts to TheHive cases, MISP enrichments, and response actions.</p>
+            <a class="access-link" href="http://localhost:3001" target="_blank">Open Dashboard &rarr;</a>
           </div>
-          <span class="badge red">Vulnerable Target</span>
-          <h3>Juice Shop</h3>
-          <p>Modern OWASP vulnerable Node.js application loaded with security challenges and tracking dashboards.</p>
-          <a class="access-link" href="http://localhost:3002" target="_blank">Access Portal &rarr;</a>
-        </article>
-        <article class="tool-card">
-          <div class="logo-wrap">
-            <img src="assets/grafana.png" alt="Grafana" class="tool-logo">
+          <div class="tool-screenshot">
+            <img src="assets/shuffle-screen.png" alt="Shuffle Interface" loading="lazy">
           </div>
-          <span class="badge cyan">Metrics & Monitoring</span>
-          <h3>Metrics Suite</h3>
-          <p>Grafana and Prometheus monitoring stack for charting container usage and system diagnostics.</p>
-          <a class="access-link" href="http://localhost:3000" target="_blank">Access Portal &rarr;</a>
         </article>
+
+        <article class="tool-card-wide">
+          <div class="tool-info">
+            <div class="tool-header">
+              <img src="assets/dvwa.png" class="tool-logo-sm" alt="DVWA">
+              <div><span class="badge red">Vulnerable Target</span><h3>DVWA</h3></div>
+            </div>
+            <p>Damn Vulnerable Web Application — intentionally vulnerable PHP/MySQL app for practicing SQL injection, XSS, CSRF, and command injection.</p>
+            <a class="access-link" href="http://localhost:8080" target="_blank">Open Dashboard &rarr;</a>
+          </div>
+          <div class="tool-screenshot no-screen">
+            <div class="screen-placeholder">
+              <img src="assets/dvwa.png" class="placeholder-logo" alt="">
+              <span>Vulnerable Web App — Port 8080</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="tool-card-wide">
+          <div class="tool-info">
+            <div class="tool-header">
+              <img src="assets/juice-shop.png" class="tool-logo-sm" alt="Juice Shop">
+              <div><span class="badge red">Vulnerable Target</span><h3>OWASP Juice Shop</h3></div>
+            </div>
+            <p>Modern vulnerable Node.js e-commerce app with 100+ OWASP challenges — SQL injection, XSS, broken auth, IDOR tracked on a scoreboard.</p>
+            <a class="access-link" href="http://localhost:3002" target="_blank">Open Dashboard &rarr;</a>
+          </div>
+          <div class="tool-screenshot">
+            <img src="assets/juice-screen.gif" alt="Juice Shop Interface" loading="lazy">
+          </div>
+        </article>
+
+        <article class="tool-card-wide">
+          <div class="tool-info">
+            <div class="tool-header">
+              <img src="assets/suricata.png" class="tool-logo-sm" alt="Suricata">
+              <div><span class="badge green">Network IDS/IPS</span><h3>Suricata</h3></div>
+            </div>
+            <p>High-performance multi-threaded IDS/IPS engine that inspects live network traffic for threats, protocol anomalies, and rule violations.</p>
+            <span class="access-link disabled">Integrated Engine — Logs via Wazuh</span>
+          </div>
+          <div class="tool-screenshot no-screen">
+            <div class="screen-placeholder">
+              <img src="assets/suricata.png" class="placeholder-logo" alt="">
+              <span>Network IDS — No Direct UI</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="tool-card-wide">
+          <div class="tool-info">
+            <div class="tool-header">
+              <img src="assets/grafana.png" class="tool-logo-sm" alt="Grafana">
+              <div><span class="badge cyan">Metrics &amp; Monitoring</span><h3>Grafana &amp; Prometheus</h3></div>
+            </div>
+            <p>Grafana dashboards visualizing Prometheus container metrics — CPU, memory, network I/O, and health checks across all running lab services.</p>
+            <a class="access-link" href="http://localhost:3000" target="_blank">Open Dashboard &rarr;</a>
+          </div>
+          <div class="tool-screenshot no-screen">
+            <div class="screen-placeholder">
+              <img src="assets/grafana.png" class="placeholder-logo" alt="">
+              <span>Metrics Dashboards &amp; Alerting</span>
+            </div>
+          </div>
+        </article>
+
       </div>
     </section>
 
