@@ -59,8 +59,8 @@ services:
       - "8088:8088"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./docker-compose.yml:/app/docker-compose.yml:ro
-      - ./.env:/app/.env:ro
+      - ${SOC_LAB_HOST_PATH:-.}/docker-compose.yml:/app/docker-compose.yml:ro
+      - ${SOC_LAB_HOST_PATH:-.}/.env:/app/.env:ro
     environment:
       - DOCKER_HOST=unix:///var/run/docker.sock
       - COMPOSE_PROJECT_NAME=${COMPOSE_PROJECT_NAME:-soclab}
@@ -72,6 +72,9 @@ services:
     image: redis:${REDIS_VERSION:-7}-alpine
     container_name: soc-redis
     restart: unless-stopped
+    profiles:
+      - intel
+      - soar
     command: >
       redis-server
       --requirepass ${REDIS_PASS:-RedisSoc123!}
@@ -86,6 +89,8 @@ services:
     image: postgres:${POSTGRES_VERSION:-15}-alpine
     container_name: soc-postgres
     restart: unless-stopped
+    profiles:
+      - ir
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-socadmin}
       POSTGRES_PASSWORD: ${POSTGRES_PASS:-PostgresSoc123!}
@@ -100,6 +105,8 @@ services:
     image: cassandra:4.1
     container_name: soc-cassandra
     restart: unless-stopped
+    profiles:
+      - ir
     environment:
       - CASSANDRA_CLUSTER_NAME=soc-cluster
       - CASSANDRA_DC=datacenter1
@@ -141,7 +148,7 @@ services:
         hard: 65536
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
-      - ./configs/elastic/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+      - ${SOC_LAB_HOST_PATH:-.}/configs/elastic/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
     ports:
       - "9200:9200"
     networks:
@@ -172,8 +179,8 @@ services:
     ports:
       - "${KIBANA_PORT:-5601}:5601"
     volumes:
-      - ./configs/elastic/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
-      - ./dashboards/kibana:/usr/share/kibana/dashboards:ro
+      - ${SOC_LAB_HOST_PATH:-.}/configs/elastic/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
+      - ${SOC_LAB_HOST_PATH:-.}/dashboards/kibana:/usr/share/kibana/dashboards:ro
     networks:
       soc-network:
         ipv4_address: 10.100.0.21
@@ -239,8 +246,8 @@ services:
       - "${WAZUH_MANAGER_PORT:-55000}:55000"
     volumes:
       - wazuh-manager-data:/var/ossec/data
-      - ./configs/wazuh/ossec.conf:/var/ossec/etc/ossec.conf:ro
-      - ./integrations:/var/ossec/integrations:ro
+      - ${SOC_LAB_HOST_PATH:-.}/configs/wazuh/ossec.conf:/var/ossec/etc/ossec.conf:ro
+      - ${SOC_LAB_HOST_PATH:-.}/integrations:/var/ossec/integrations:ro
     networks:
       soc-network:
         ipv4_address: 10.100.0.31
@@ -272,7 +279,7 @@ services:
       - "4431:443"
     volumes:
       - wazuh-dashboard-data:/usr/share/wazuh-dashboard/data
-      - ./dashboards/wazuh:/usr/share/wazuh-dashboard/dashboards:ro
+      - ${SOC_LAB_HOST_PATH:-.}/dashboards/wazuh:/usr/share/wazuh-dashboard/dashboards:ro
     networks:
       soc-network:
         ipv4_address: 10.100.0.32
@@ -388,7 +395,7 @@ services:
       - "${THEHIVE_PORT:-9000}:9000"
     volumes:
       - thehive-data:/opt/thp/data
-      - ./configs/thehive/application.conf:/etc/thehive/application.conf:ro
+      - ${SOC_LAB_HOST_PATH:-.}/configs/thehive/application.conf:/etc/thehive/application.conf:ro
     networks:
       soc-network:
         ipv4_address: 10.100.0.40
@@ -416,8 +423,8 @@ services:
       - "${CORTEX_PORT:-9001}:9001"
     volumes:
       - cortex-data:/opt/cortex/data
-      - ./configs/cortex/application.conf:/etc/cortex/application.conf:ro
-      - ./configs/cortex/analyzers:/opt/cortex/analyzers:ro
+      - ${SOC_LAB_HOST_PATH:-.}/configs/cortex/application.conf:/etc/cortex/application.conf:ro
+      - ${SOC_LAB_HOST_PATH:-.}/configs/cortex/analyzers:/opt/cortex/analyzers:ro
     networks:
       soc-network:
         ipv4_address: 10.100.0.41
@@ -534,7 +541,7 @@ services:
       - '--web.enable-lifecycle'
     volumes:
       - prometheus-data:/prometheus
-      - ./configs/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ${SOC_LAB_HOST_PATH:-.}/configs/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     ports:
       - "9090:9090"
     networks:
@@ -553,7 +560,7 @@ services:
       - GF_INSTALL_PLUGINS=grafana-piechart-panel,grafana-worldmap-panel,elasticsearch
     volumes:
       - grafana-data:/var/lib/grafana
-      - ./dashboards/grafana:/etc/grafana/provisioning/dashboards:ro
+      - ${SOC_LAB_HOST_PATH:-.}/dashboards/grafana:/etc/grafana/provisioning/dashboards:ro
     ports:
       - "${GRAFANA_PORT:-3000}:3000"
     networks:
@@ -608,8 +615,8 @@ services:
       - SYS_NICE
     network_mode: host
     volumes:
-      - ./configs/suricata/suricata.yaml:/etc/suricata/suricata.yaml:ro
-      - ./logs/suricata:/var/log/suricata
+      - ${SOC_LAB_HOST_PATH:-.}/configs/suricata/suricata.yaml:/etc/suricata/suricata.yaml:ro
+      - ${SOC_LAB_HOST_PATH:-.}/logs/suricata:/var/log/suricata
       - suricata_rules:/etc/suricata/rules
 
   zeek:
@@ -624,9 +631,9 @@ services:
       - NET_RAW
     network_mode: host
     volumes:
-      - ./configs/zeek/zeekctl.cfg:/usr/local/zeek/etc/zeekctl.cfg:ro
-      - ./configs/zeek/local.zeek:/usr/local/zeek/share/zeek/site/local.zeek:ro
-      - ./logs/zeek:/usr/local/zeek/logs
+      - ${SOC_LAB_HOST_PATH:-.}/configs/zeek/zeekctl.cfg:/usr/local/zeek/etc/zeekctl.cfg:ro
+      - ${SOC_LAB_HOST_PATH:-.}/configs/zeek/local.zeek:/usr/local/zeek/share/zeek/site/local.zeek:ro
+      - ${SOC_LAB_HOST_PATH:-.}/logs/zeek:/usr/local/zeek/logs
       - zeek_data:/usr/local/zeek/spool
 
   # ==================== FULL PROFILE (ALL SERVICES) ====================
@@ -640,7 +647,7 @@ services:
     volumes:
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./logs:/var/log/soc:ro
+      - ${SOC_LAB_HOST_PATH:-.}/logs:/var/log/soc:ro
     command:
       - "-e"
       - "--strict.perms=false"

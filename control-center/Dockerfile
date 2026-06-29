@@ -13,6 +13,7 @@ COPY . .
 RUN npm run build
 
 FROM node:20-alpine AS runtime
+RUN apk add --no-cache docker-cli docker-cli-compose
 WORKDIR /app
 COPY --from=backend-builder /app/dist ./dist
 COPY --from=backend-builder /app/node_modules ./node_modules

@@ -14,4 +14,15 @@ configs/nginx/ssl/*.key
 __pycache__/
 *.pyc
 .DS_Store
-Thumbs.db
+
+# Local JS / React dependencies and builds
+node_modules/
+dist/
+control-center/node_modules/
+control-center/dist/
+control-center/frontend/node_modules/
+control-center/frontend/dist/
+
+# Persisted deployment history
+control-center/history.json
+control-center/src/history.json

@@ -62,60 +62,29 @@ else
 fi
 
 echo ""
-echo "[5/8] Pulling Docker images..."
-docker compose pull --quiet 2>/dev/null || docker compose pull
-echo "  ✓ Images pulled"
-
-echo ""
-echo "[6/8] Starting SOC Lab stack..."
-if [ "${WITH_LINUX_NSM:-0}" = "1" ]; then
-    docker compose --profile linux-nsm up -d
-else
-    docker compose up -d
+echo "[5/8] Configuring environment..."
+# Remove any existing SOC_LAB_HOST_PATH lines
+if [ -f .env ]; then
+    # Cross-platform sed delete to avoid issues
+    grep -v '^SOC_LAB_HOST_PATH=' .env > .env.tmp && mv .env.tmp .env
 fi
-echo "  ✓ Stack deployed"
+echo "SOC_LAB_HOST_PATH=$PROJECT_DIR" >> .env
+echo "  ✓ Environment configured"
 
 echo ""
-echo "[7/8] Waiting for services to become healthy..."
-echo "  (This may take 2-5 minutes depending on your system)"
-sleep 10
+echo "[6/8] Pulling Control Center image..."
+docker compose pull control-center
+echo "  ✓ Control Center image pulled"
 
-SERVICES=("elasticsearch" "kibana" "wazuh-indexer" "wazuh-manager" "thehive" "cassandra" "redis")
-for svc in "${SERVICES[@]}"; do
-    echo -n "  Waiting for $svc..."
-    for i in $(seq 1 60); do
-        STATUS=$(docker inspect --format='{{.State.Health.Status}}' "soc-$svc" 2>/dev/null || echo "starting")
-        if [ "$STATUS" = "healthy" ]; then
-            echo " ✓"
-            break
-        fi
-        if [ "$i" -eq 60 ]; then
-            echo " timeout (status: $STATUS)"
-        fi
-        sleep 5
-    done
-done
+echo ""
+echo "[7/8] Starting Control Center..."
+docker compose up -d control-center
+echo "  ✓ Control Center started"
 
 echo ""
 echo "[8/8] Setup complete!"
 echo ""
 echo "==========================================="
-echo "  SOC LAB - Access URLs"
-echo "==========================================="
-echo ""
-echo "  Kibana:       http://localhost:5601"
-echo "  Wazuh:        https://localhost:4431 (user: admin / pass: see .env)"
-echo "  TheHive:      http://localhost:9000"
-echo "  Cortex:       http://localhost:9001"
-echo "  MISP:         https://localhost:8443 (user: admin@admin.test / pass: admin)"
-echo "  Grafana:      http://localhost:3000 (user: admin / pass: GrafanaAdmin123!)"
-echo "  Prometheus:   http://localhost:9090"
-echo "  Shuffle:      http://localhost:3443"
-echo "  MinIO:        http://localhost:9002 (console: localhost:9003)"
-echo "  DVWA:         http://localhost:8080 (user: admin / pass: password)"
-echo "  Juice Shop:   http://localhost:3001"
-echo "  Docs:         http://localhost:8090"
-echo ""
-echo "  Linux/Kali packet monitoring: WITH_LINUX_NSM=1 ./scripts/setup.sh"
-echo "  Default credentials in .env - CHANGE BEFORE PRODUCTION USE!"
+echo "  SOC-LAB Control Center is running!"
+echo "  URL:       http://localhost:8088"
 echo "==========================================="

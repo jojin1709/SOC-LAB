@@ -42,13 +42,58 @@
 
 ## SOC-LAB Control Center
 
-SOC-LAB now includes a web-based Control Center for managing lab modules individually.
+SOC-LAB includes a web-based Control Center for managing lab modules individually. This enables a lightweight start, allowing you to deploy only the Control Center and spin up individual labs on demand via a web interface.
+
+### Architecture
+
+```mermaid
+graph TD
+    User([Security Practitioner]) -->|Web Browser: 8088| FE
+    
+    subgraph Host ["Host System (Windows / Linux)"]
+        Docker_Sock["/var/run/docker.sock (Docker Socket)"]
+        Env_File[".env (SOC_LAB_HOST_PATH)"]
+        Compose_File["docker-compose.yml"]
+    end
+
+    subgraph CC_Container ["Control Center Container"]
+        FE["React + TS Frontend (Tailwind UI)"]
+        BE["NodeJS Express Backend"]
+        D_CLI["Docker CLI & Compose Plugin"]
+        
+        FE -->|REST API / WebSockets| BE
+        BE -->|Dockerode (Stats / Info)| Docker_Sock
+        BE -->|exec (Compose Profiles)| D_CLI
+        D_CLI -->|Manages Container lifecycle| Docker_Sock
+    end
+    
+    subgraph Lab_Containers ["Containerized Lab Profiles"]
+        Core["Core SOC Profile (Wazuh, Elastic, DVWA...)"]
+        Intel["Threat Intel Profile (MISP)"]
+        IR["Incident Response Profile (TheHive, Cortex)"]
+        SOAR["SOAR Profile (Shuffle)"]
+        Mon["Monitoring Profile (Grafana, Prometheus)"]
+        NSM["NSM Profile (Suricata, Zeek)"]
+    end
+    
+    Docker_Sock -->|Spawns & Monitors| Lab_Containers
+    CC_Container -.->|Reads config & env| Compose_File
+    CC_Container -.->|Reads config & env| Env_File
+```
 
 ### Quick Start with Control Center
 
+Ensure Docker is running, then run:
+
 ```bash
-docker compose up -d control-center
+# Windows
+powershell -ExecutionPolicy Bypass -File .\scripts\setup.ps1
+
+# Linux
+chmod +x scripts/*.sh
+./scripts/setup.sh
 ```
+
 
 Open the Control Center in your browser:
 

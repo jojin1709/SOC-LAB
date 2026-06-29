@@ -54,24 +54,26 @@ cert = (
 '@ | python -
 }
 
-Write-Host "[2/4] Validating compose file..."
-docker compose config --quiet
-
-Write-Host "[3/4] Pulling images..."
-docker compose pull
-
-Write-Host "[4/4] Starting stack..."
-if ($WithLinuxNsm) {
-    docker compose --profile linux-nsm up -d
-} else {
-    docker compose up -d
+Write-Host "[2/4] Initializing environment config..."
+$EnvFilePath = Join-Path $ProjectDir ".env"
+if (-not (Test-Path $EnvFilePath)) {
+    Copy-Item (Join-Path $ProjectDir ".env.example") $EnvFilePath
 }
 
+# Update host path in .env
+$EnvContent = Get-Content $EnvFilePath
+$EnvContent = $EnvContent | Where-Object { $_ -notmatch "^SOC_LAB_HOST_PATH=" }
+$EnvContent += "SOC_LAB_HOST_PATH=$ProjectDir"
+$EnvContent | Set-Content $EnvFilePath
+
+Write-Host "[3/4] Pulling Control Center image..."
+docker compose pull control-center
+
+Write-Host "[4/4] Starting Control Center..."
+docker compose up -d control-center
+
 Write-Host ""
-Write-Host "SOC Lab is starting."
-Write-Host "Docs:      http://localhost:8090"
-Write-Host "Kibana:    http://localhost:5601"
-Write-Host "Wazuh:     https://localhost:4431"
-Write-Host "TheHive:   http://localhost:9000"
-Write-Host "MISP:      https://localhost:8443"
-Write-Host "Grafana:   http://localhost:3000"
+Write-Host "==========================================="
+Write-Host "  SOC-LAB Control Center is running!"
+Write-Host "  URL:       http://localhost:8088"
+Write-Host "==========================================="

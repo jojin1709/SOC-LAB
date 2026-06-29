@@ -17,7 +17,6 @@ WORKDIR /app
 COPY --from=backend-builder /app/dist ./dist
 COPY --from=backend-builder /app/node_modules ./node_modules
 COPY --from=backend-builder /app/package*.json ./
-COPY --from=backend-builder /app/static.json ./dist/public 2>/dev/null || true
 COPY --from=frontend-builder /frontend/dist ./dist/public
 
 EXPOSE 8088

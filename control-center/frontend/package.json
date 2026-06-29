@@ -2,7 +2,9 @@
   "name": "soclab-control-center-frontend",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "dependencies": {
+    "lucide-react": "^1.22.0",
     "react": "^18.3.0",
     "react-dom": "^18.3.0"
   },
